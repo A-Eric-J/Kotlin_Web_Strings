@@ -28,7 +28,7 @@ flutter:
         package: com.amiirrallii.kotlin_web_strings
         pluginClass: KotlinWebStringsPlugin
       web:
-        pluginClass: KotlinWebStringsWeb
+        pluginClass: StringFunctionsWeb
         fileName: kotlin_web_strings_web.dart
 
   # To add assets to your plugin package, uncomment and list the assets here:
