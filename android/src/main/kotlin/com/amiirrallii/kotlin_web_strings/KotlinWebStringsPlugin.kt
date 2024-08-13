@@ -1,35 +1,36 @@
 package com.amiirrallii.kotlin_web_strings
 
-import androidx.annotation.NonNull
-
-import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.plugin.common.MethodCall
+import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 
-/** KotlinWebStringsPlugin */
-class KotlinWebStringsPlugin: FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
-  private lateinit var channel : MethodChannel
+class MainActivity: FlutterActivity() {
+  private val CHANNEL = "com.kotlin_web_strings/string_functions"
 
-  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "kotlin_web_strings")
-    channel.setMethodCallHandler(this)
-  }
+  override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+    super.configureFlutterEngine(flutterEngine)
 
-  override fun onMethodCall(call: MethodCall, result: Result) {
-    if (call.method == "getPlatformVersion") {
-      result.success("Android ${android.os.Build.VERSION.RELEASE}")
-    } else {
-      result.notImplemented()
+    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+      val input = call.argument<String>("input")
+      when (call.method) {
+        "reverseString" -> result.success(StringFunctions().reverseString(input!!))
+        "toUpperCase" -> result.success(StringFunctions().toUpperCase(input!!))
+        "toLowerCase" -> result.success(StringFunctions().toLowerCase(input!!))
+        "capitalizeString" -> result.success(StringFunctions().capitalizeString(input!!))
+        "getLength" -> result.success(StringFunctions().getLength(input!!))
+        "isPalindrome" -> result.success(StringFunctions().isPalindrome(input!!))
+        "countVowels" -> result.success(StringFunctions().countVowels(input!!))
+        "replaceSpaces" -> {
+          val replacement = call.argument<String>("replacement")
+          result.success(StringFunctions().replaceSpaces(input!!, replacement!!))
+        }
+        "getFirstCharacter" -> result.success(StringFunctions().getFirstCharacter(input!!)?.toString())
+        "getLastCharacter" -> result.success(StringFunctions().getLastCharacter(input!!)?.toString())
+        "containsSubstring" -> {
+          val substring = call.argument<String>("substring")
+          result.success(StringFunctions().containsSubstring(input!!, substring!!))
+        }
+        else -> result.notImplemented()
+      }
     }
-  }
-
-  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
   }
 }
