@@ -1,36 +1,76 @@
 package com.amiirrallii.kotlin_web_strings
 
-import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodChannel
 
-class MainActivity: FlutterActivity() {
-  private val CHANNEL = "com.kotlin_web_strings/string_functions"
+class MyFlutterPlugin : FlutterPlugin {
+  private lateinit var channel: MethodChannel
 
-  override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-    super.configureFlutterEngine(flutterEngine)
-
-    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+  override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    channel = MethodChannel(binding.binaryMessenger, "kotlin_web_strings")
+    channel.setMethodCallHandler { call, result ->
       val input = call.argument<String>("input")
       when (call.method) {
-        "reverseString" -> result.success(StringFunctions().reverseString(input!!))
-        "toUpperCase" -> result.success(StringFunctions().toUpperCase(input!!))
-        "toLowerCase" -> result.success(StringFunctions().toLowerCase(input!!))
-        "capitalizeString" -> result.success(StringFunctions().capitalizeString(input!!))
-        "getLength" -> result.success(StringFunctions().getLength(input!!))
-        "isPalindrome" -> result.success(StringFunctions().isPalindrome(input!!))
-        "countVowels" -> result.success(StringFunctions().countVowels(input!!))
-        "replaceSpaces" -> {
-          val replacement = call.argument<String>("replacement")
-          result.success(StringFunctions().replaceSpaces(input!!, replacement!!))
+        "reverseString" -> {
+          val reversedString = StringFunctions().reverseString(input!!)
+          result.success(reversedString)
         }
-        "getFirstCharacter" -> result.success(StringFunctions().getFirstCharacter(input!!)?.toString())
-        "getLastCharacter" -> result.success(StringFunctions().getLastCharacter(input!!)?.toString())
-        "containsSubstring" -> {
-          val substring = call.argument<String>("substring")
-          result.success(StringFunctions().containsSubstring(input!!, substring!!))
+        "toUpperCase" -> {
+          val upperCaseString = StringFunctions().toUpperCase(input!!)
+          result.success(upperCaseString)
+        }
+        "toLowerCase" -> {
+          val lowerCaseString = StringFunctions().toLowerCase(input!!)
+          result.success(lowerCaseString)
+        }
+        "getLength" -> {
+          val length = StringFunctions().getLength(input!!)
+          result.success(length)
+        }
+        "concatenate" -> {
+          val input2 = call.argument<String>("input2")!!
+          val concatenatedString = StringFunctions().concatenate(input!!, input2)
+          result.success(concatenatedString)
+        }
+        "replaceAll" -> {
+          val from = call.argument<String>("from")!!
+          val to = call.argument<String>("to")!!
+          val replacedString = StringFunctions().replaceAll(input!!, from, to)
+          result.success(replacedString)
+        }
+        "contains" -> {
+          val substring = call.argument<String>("substring")!!
+          val contains = StringFunctions().contains(input!!, substring)
+          result.success(contains)
+        }
+        "substring" -> {
+          val start = call.argument<Int>("start")!!
+          val end = call.argument<Int>("end")
+          val substring = if (end != null) {
+            StringFunctions().substring(input!!, start, end)
+          } else {
+            StringFunctions().substring(input!!, start)
+          }
+          result.success(substring)
+        }
+        "trim" -> {
+          val trimmedString = StringFunctions().trim(input!!)
+          result.success(trimmedString)
+        }
+        "trimLeft" -> {
+          val trimmedLeftString = StringFunctions().trimLeft(input!!)
+          result.success(trimmedLeftString)
+        }
+        "trimRight" -> {
+          val trimmedRightString = StringFunctions().trimRight(input!!)
+          result.success(trimmedRightString)
         }
         else -> result.notImplemented()
       }
     }
+  }
+
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    channel.setMethodCallHandler(null)
   }
 }
