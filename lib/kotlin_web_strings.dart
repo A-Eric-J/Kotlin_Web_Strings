@@ -4,9 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:kotlin_web_strings/kotlin_web_strings_web.dart';
 
-// Import web or native implementations conditionally
-//TODO here we have a problem. when we want to have Android running this should be changed/
-// import 'string_functions_web.dart' if (dart.library.io) 'src/native/string_functions_native.dart';
 
 class StringFunctions {
   static const platform = MethodChannel('kotlin_web_strings');
@@ -90,7 +87,7 @@ class StringFunctions {
 
   Future<String> substring(String text, int start, [int? end]) async {
     if (kIsWeb) {
-      return StringFunctionsWeb().substring(text, start, end);
+      return StringFunctionsWeb().substring(text, start, end ?? 0);
     } else if (Platform.isAndroid) {
       final String result = await platform.invokeMethod('substring', {'input': text, 'start': start, 'end': end});
       return result;
