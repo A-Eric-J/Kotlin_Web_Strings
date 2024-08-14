@@ -67,7 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: const Text("Kotlin Web Strings Example"),
+        title: Align(
+            alignment: Alignment.center,
+            child: const Text("Kotlin Web Strings Example",)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -83,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Text("Text 2: $text2", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ],
               ),
+              SizedBox(height: 8,),
               Text("Reversed String: $_reversedString"),
               SizedBox(height: 8,),
               Text("Upper Case String: $_upperCaseString"),

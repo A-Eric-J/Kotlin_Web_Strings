@@ -29,7 +29,7 @@ flutter:
         pluginClass: KotlinWebStringsPlugin
       web:
         pluginClass: StringFunctionsWeb
-        fileName: kotlin_web_strings_web.dart
+        fileName: string_functions_web.dart
 
   # To add assets to your plugin package, uncomment and list the assets here:
   # assets:
